@@ -2,9 +2,9 @@
 <template>
   <div class="enroll-wrapper">
       <div class="enroll-content">
-             <p class="info"><span>name:</span><input type="email" id="inputEmail" class="form-control" placeholder="Email address" ></p>
-             <p class="info"><span>password:</span><input type="password" id="inputPassword" class="form-control" placeholder="Password" ></p>
-              <button class="btn" id="btn">enroll</button>
+             <p class="info"><span>name:</span><input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email"></p>
+             <p class="info"><span>password:</span><input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password"></p>
+             <button class="btn" id="btn" @click="enrollData">enroll</button>
         </div>
   </div>
 </template>
@@ -12,7 +12,21 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+        email:"",
+        password:""
+    };
+  },
+  methods:{
+    enrollData(){
+        this.$http.get("http://localhost:8011/enroll",{params: {email:this.email,password:this.password}}).then(res=>{
+              if(res.body==="ok"){
+                this.$router.push({ path: '/' });
+              }else{
+                alert("error")
+              }
+        })
+    }
   }
 };
 </script>

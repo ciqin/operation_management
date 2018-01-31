@@ -3,6 +3,7 @@
   <div class="user">
     <div class="user-header">
        <headers :content="content"></headers>
+       <span class="icon-user-tie"></span>
     </div>
     <div class="user-sidebar">
       <sidebar></sidebar>
@@ -45,7 +46,7 @@ export default {
       queryResult:0,
       submit:1,
       result:0,
-      content:'user content'
+      content:'user pages'
     };
   },
   methods:{
@@ -56,7 +57,9 @@ export default {
       this.result = 0;
     },
     querySubmit(){
-        this.query.push(this.ele)
+        this.query.push(this.ele);
+        let newArr = Array.from(new Set(this.query)._c);
+        this.query = newArr;
         this.submit = 0;
         this.result = 1;
     }
@@ -68,22 +71,35 @@ export default {
 };
 </script>
 <style scoped>
+@import url(../../common/css/icon.css);
+.user{
+  height: 100%;
+  background:#fff;
+}
 .user-header {
   position: fixed;
   top: 0;
   height: 50px;
   width: 100%;
+  background:rgb(63,157,252);
+}
+.icon-user-tie{
+  font-size: 30px;
+  float:right;
+  margin-top:10px;
+  margin-right:10px;
 }
 .user-sidebar {
   position: fixed;
   top: 50px;
   min-width: 210px;
-  background: #424a5d;
+  background: rgb(61,70,76);
   height: 100%;
 }
 .user-content {
   margin-left: 210px;
-  margin-top: 50px;
+  padding-top: 50px;
+  background:#fff;
 }
 .query,.usable{
   float:left;

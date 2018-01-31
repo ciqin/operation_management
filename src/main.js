@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router';
-// import VueResource from 'vue-resource'
+import VueResource from 'vue-resource'
 import User from './components/user/user'
 import Login from './components/login/login'
 import Doctor from './components/doctor/doctor'
@@ -11,7 +11,7 @@ import Revise from './components/revise/revise'
 import Enroll from './components/enroll/enroll'
 
 Vue.use(VueRouter);
-// Vue.use(VueResource);
+Vue.use(VueResource);
 
 const router = new VueRouter({
   linkActiveClass:'active',

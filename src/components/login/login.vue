@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
       <div class="login-title">
-        <h2>Please sign in </h2>
+        <h2>Please Sign In </h2>
       </div>
       <div class="form-signin">
         <div class="switch-wrapper">
@@ -9,8 +9,8 @@
           <div class="doctor-login" @click="addDoctor" :class="{'addborder' :addborder==='doctor'}">doctor</div>
         </div>  
         <div class="login-content">
-           <input type="email" id="inputEmail" class="form-control" placeholder="Email address" >
-            <input type="password" id="inputPassword" class="form-control" placeholder="Password" >
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email">
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password">
             <div class="input-operation">
                <router-link to="/revise">Go to revise</router-link>
                <router-link to="/enroll">Go to enroll</router-link>
@@ -28,19 +28,27 @@ export default {
   name: "loginWrapper",
   data() {
     return {
-      addborder:'user'
+      addborder: "user",
+      email:"",
+      password:""
     };
   },
-  methods:{
-    goUser(){
+  methods: {
+    goUser() {
       let paths = this.addborder;
-      this.$router.push({path:`/${paths}`})
+      this.$http.get("http://localhost:8011/load",{params: {email:this.email,password:this.password}}).then(res=>{
+            if(res.body==="ok"){
+              this.$router.push({ path: `/${paths}` });
+            }else{
+              alert("user and password wrong")
+            }
+      })
     },
-    addUser(){
-      this.addborder = 'user'
+    addUser() {
+      this.addborder = "user";
     },
-    addDoctor(){
-      this.addborder = 'doctor'
+    addDoctor() {
+      this.addborder = "doctor";
     }
   }
 };
@@ -48,18 +56,23 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.login-wrapper{
+.login-wrapper {
   position: absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  -ms-transform:translate(-50%,-50%);	/* IE 9 */
-  -moz-transform:translate(-50%,-50%); 	/* Firefox */
-  -webkit-transform:translate(-50%,-50%); /* Safari 和 Chrome */
-  -o-transform:translate(-50%,-50%);	/* Opera */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%); /* IE 9 */
+  -moz-transform: translate(-50%, -50%); /* Firefox */
+  -webkit-transform: translate(-50%, -50%); /* Safari 和 Chrome */
+  -o-transform: translate(-50%, -50%); /* Opera */
 }
-.login-title{
+.login-title {
   text-align: center;
+}
+.login-title h2 {
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
 }
 .form-signin {
   width: 400px;
@@ -81,16 +94,15 @@ export default {
   border-bottom: 1px solid rgb(221, 222, 223);
   text-align: center;
 }
-.addborder{
+.addborder {
   border-bottom: 1px solid red;
 }
 .form-signin .checkbox {
   font-weight: 400;
 }
 /* login content*/
-.form-signin .login-content{
+.form-signin .login-content {
   padding: 30px;
-  
 }
 .form-signin .form-control {
   position: relative;
@@ -117,15 +129,15 @@ export default {
   border-top-right-radius: 0;
 }
 /* user login btn*/
-.login-btn{
+.login-btn {
   text-align: right;
 }
-.form-signin #btn{
-  width:100px;
+.form-signin #btn {
+  width: 100px;
   display: inline-block;
-  border: 1px splid rgb(93,77,67);
-  background:rgb(117,144,102);
-  height:30px;
+  border: 1px splid rgb(93, 77, 67);
+  background: rgb(117, 144, 102);
+  height: 30px;
   line-height: 30px;
   border-radius: 5px;
 }

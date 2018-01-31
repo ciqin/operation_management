@@ -44,7 +44,7 @@ import Sidebar from "../sidebar/sidebar";
 export default {
   data() {
     return {
-      content: "doctor content",
+      content: "user pages",
       api: ["API1", "API2", "API3"],
       show: 0,
       addinput: false,
@@ -78,22 +78,27 @@ button {
   padding: 5px;
   background: rgb(117, 144, 102);
 }
+.doctor{
+  height:100%;
+  background:#fff;
+}
 .doctor-header {
   position: fixed;
   top: 0;
   height: 50px;
   width: 100%;
+  background:rgb(63,157,252);
 }
 .doctor-sidebar {
   position: fixed;
   top: 50px;
   min-width: 210px;
-  background: #424a5d;
+  background: rgb(61,70,76);
   height: 100%;
 }
 .doctor-content {
   margin-left: 210px;
-  margin-top: 50px;
+  padding-top: 50px;
 }
 .content-show {
   float: left;
