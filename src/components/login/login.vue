@@ -22,34 +22,58 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   name: "loginWrapper",
   data() {
     return {
       addborder: "user",
-      email:"",
-      password:""
+      email: "",
+      password: "",
+      fontName: "icon-user-tie",
+      data: Array,
+      userData: Array,
+      hospitalData: Array
     };
   },
   methods: {
     goUser() {
       let paths = this.addborder;
-      this.$http.get("http://localhost:8011/load",{params: {email:this.email,password:this.password}}).then(res=>{
-            if(res.body==="ok"){
-              this.$router.push({ path: `/${paths}` });
-            }else{
-              alert("user and password wrong")
-            }
-      })
+      let fontName = this.fontName;
+      //  user html5 localStorage
+      localStorage.fontName = this.fontName;
+      let that = this;
+      let flag = false;
+      this.data.map(function(val, index) {
+        if (val.name == that.email && val.password == that.password) {
+          flag = true;
+          that.$router.push({ path: `/${paths}` });
+        }
+      });
+      if (!flag) {
+        alert("Wrong username or password");
+      }
     },
     addUser() {
       this.addborder = "user";
+      this.fontName = "icon-user-tie";
+      this.data = this.userData;
     },
     addDoctor() {
       this.addborder = "doctor";
+      this.fontName = "icon-home";
+      this.data = this.hospitalData;
     }
+  },
+  created() {
+    this.$http.get("static/user_login.json").then(res => {
+      this.userData = res.body;
+      this.data = res.body;
+    });
+    this.$http.get("static/hospital_login.json").then(res => {
+      this.hospitalData = res.body;
+    });
+    console.log(this);
   }
 };
 </script>

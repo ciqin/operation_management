@@ -5,7 +5,7 @@
           <headers :content="content"></headers>
       </div>
       <div class="doctor-sidebar">
-        <sidebar ></sidebar>
+        <sidebar :fontName = "fontName"></sidebar>
       </div>
       <div class="doctor-content">
         <div class="content-show">
@@ -48,7 +48,8 @@ export default {
       api: ["API1", "API2", "API3"],
       show: 0,
       addinput: false,
-      API:false
+      API:false,
+      fontName:""
     };
   },
   components: {
@@ -69,6 +70,9 @@ export default {
     descCon(ele){
         this.API = ele;
     }
+  },
+  created(){
+    this.fontName = localStorage.fontName
   }
 };
 </script>
