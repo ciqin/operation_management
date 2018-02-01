@@ -3,16 +3,15 @@
   <div class="user">
     <div class="user-header">
        <headers :content="content"></headers>
-       <span class="icon-user-tie"></span>
     </div>
     <div class="user-sidebar">
-      <sidebar></sidebar>
+      <sidebar :fontName = "fontName"></sidebar>
     </div>
     <div class="user-content">
         <div class="query">
-           <button class="query-btn">query records</button>
+           <button class="query-btn" @click="clickChange">query records</button>
             <ul v-show="1">
-              <li v-for="item in query">{{item}}</li>
+              <li v-for="item in query" v-show="query && clickShow">{{item}}</li>
             </ul>
         </div>
         <div class="usable">
@@ -34,19 +33,20 @@
     </div>
   </div>
 </template>
-
 <script>
 import Headers from "../header/headers";
 import Sidebar from "../sidebar/sidebar";
 export default {
   data() {
     return {
-      query: ['API1'],
+      query: [],
+      clickShow:false,
       usable:["API1","API2","API3"],
       queryResult:0,
       submit:1,
       result:0,
-      content:'user pages'
+      content:'user pages',
+      fontName:""
     };
   },
   methods:{
@@ -62,11 +62,17 @@ export default {
         this.query = newArr;
         this.submit = 0;
         this.result = 1;
+    },
+    clickChange(){
+      this.clickShow = !this.clickShow;
     }
   },
   components: {
     headers: Headers,
     sidebar: Sidebar
+  },
+  created(){
+    this.fontName = localStorage.fontName
   }
 };
 </script>

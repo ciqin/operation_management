@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import Write from '../../common/js/test'
+
 export default {
   data() {
     return {
@@ -19,13 +21,8 @@ export default {
   },
   methods:{
     enrollData(){
-        this.$http.get("http://localhost:8011/enroll",{params: {email:this.email,password:this.password}}).then(res=>{
-              if(res.body==="ok"){
-                this.$router.push({ path: '/' });
-              }else{
-                alert("error")
-              }
-        })
+      // this.$router.push({ path: '/' });
+      // Write("gao","44444")
     }
   }
 };
