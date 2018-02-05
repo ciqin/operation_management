@@ -6,7 +6,7 @@ import VueRouter from 'vue-router';
 import VueResource from 'vue-resource'
 import User from './components/user/user'
 import Login from './components/login/login'
-import Doctor from './components/doctor/doctor'
+import Hospital from './components/doctor/doctor'
 import Revise from './components/revise/revise'
 import Enroll from './components/enroll/enroll'
 
@@ -19,7 +19,7 @@ const router = new VueRouter({
   routes: [
     { path: '/', name: 'login', component: Login },
     { path: '/user', name: 'user', component: User },
-    { path: '/doctor', name: 'doctor', component: Doctor },
+    { path: '/hospital', name: 'hospital', component: Hospital },
     { path: '/revise', name: 'revise', component: Revise },
     { path: '/enroll', name: 'enroll', component: Enroll }
   ]

@@ -11,7 +11,14 @@
         <div class="query">
            <button class="query-btn" @click="clickChange">query records</button>
             <ul v-show="1">
-              <li v-for="item in query" v-show="query && clickShow">{{item}}</li>
+              <li v-for="item in query" v-show="query && clickShow">
+                <p><span>name:</span><span>{{item.name}}</span></p>
+                <p>
+                  <span>hospital:</span>
+                  <span v-for="hos in item.hps">{{hos}}</span>
+                </p>
+                <p><span>result</span><span>{{item.result}}</span></p>
+              </li>
             </ul>
         </div>
         <div class="usable">
@@ -23,11 +30,11 @@
         <div class="add-result" v-show="queryResult">
            <div class="message" v-show="submit">
                 <span>args:</span>
-                <input type="text">
+                <input type="text" v-model="queryNumber">
                 <button @click="querySubmit">submit</button>
             </div>
             <div class="result" v-show="result">
-                <p>执行结果</p>
+                <p>{{result}}</p>
             </div>
         </div>
     </div>
@@ -36,15 +43,18 @@
 <script>
 import Headers from "../header/headers";
 import Sidebar from "../sidebar/sidebar";
+import CmdUtil from '../../common/js/cmdUtil';
+let cmdUtil = new CmdUtil();
 export default {
   data() {
     return {
       query: [],
       clickShow:false,
-      usable:["API1","API2","API3"],
+      usable:[],
       queryResult:0,
       submit:1,
       result:0,
+      queryNumber:"",
       content:'user pages',
       fontName:""
     };
@@ -57,11 +67,9 @@ export default {
       this.result = 0;
     },
     querySubmit(){
-        this.query.push(this.ele);
-        let newArr = Array.from(new Set(this.query)._c);
-        this.query = newArr;
         this.submit = 0;
         this.result = 1;
+        this.result = cmdUtil.invokeAPI(this.ele,this.queryNumber)
     },
     clickChange(){
       this.clickShow = !this.clickShow;
@@ -73,6 +81,8 @@ export default {
   },
   created(){
     this.fontName = localStorage.fontName
+    this.query = cmdUtil.queryHistoricRecords();
+    this.usable = cmdUtil.queryAvailableAPI();
   }
 };
 </script>

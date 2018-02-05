@@ -6,7 +6,7 @@
       <div class="form-signin">
         <div class="switch-wrapper">
           <div class="user-login" @click="addUser" :class="{'addborder' :addborder==='user'}">user</div>
-          <div class="doctor-login" @click="addDoctor" :class="{'addborder' :addborder==='doctor'}">doctor</div>
+          <div class="doctor-login" @click="addDoctor" :class="{'addborder' :addborder==='hospital'}">doctor</div>
         </div>  
         <div class="login-content">
             <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email">
@@ -23,6 +23,8 @@
   </div>
 </template>
 <script>
+import  Manager from '../../common/js/userManagement';
+let manager = new Manager();
 export default {
   name: "loginWrapper",
   data() {
@@ -31,49 +33,27 @@ export default {
       email: "",
       password: "",
       fontName: "icon-user-tie",
-      data: Array,
-      userData: Array,
-      hospitalData: Array
     };
   },
   methods: {
     goUser() {
       let paths = this.addborder;
       let fontName = this.fontName;
-      //  user html5 localStorage
       localStorage.fontName = this.fontName;
-      let that = this;
-      let flag = false;
-      this.data.map(function(val, index) {
-        if (val.name == that.email && val.password == that.password) {
-          flag = true;
-          that.$router.push({ path: `/${paths}` });
-        }
-      });
-      if (!flag) {
+      if(manager.signIn(this.addborder,this.email,this.password)){
+        this.$router.push({ path: `/${paths}` });
+      }else{
         alert("Wrong username or password");
-      }
+      }   
     },
     addUser() {
       this.addborder = "user";
       this.fontName = "icon-user-tie";
-      this.data = this.userData;
     },
     addDoctor() {
-      this.addborder = "doctor";
+      this.addborder = "hospital";
       this.fontName = "icon-home";
-      this.data = this.hospitalData;
     }
-  },
-  created() {
-    this.$http.get("static/user_login.json").then(res => {
-      this.userData = res.body;
-      this.data = res.body;
-    });
-    this.$http.get("static/hospital_login.json").then(res => {
-      this.hospitalData = res.body;
-    });
-    console.log(this);
   }
 };
 </script>
