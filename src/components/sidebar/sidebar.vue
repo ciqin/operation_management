@@ -3,7 +3,7 @@
   <div class="sidebar-c">
       <div class="info">
         <span class="head" :class="fontName"></span>
-        <p class="desc">some hospital descrition</p>
+        <p class="desc">{{userName}}</p>
       </div>
   </div>
 </template>
@@ -11,13 +11,15 @@
 <script>
 export default {
   props:{
-    fontName:String
+    fontName:String,
+    userName:String,
   },
   data () {
     return {
     };
   },
   created(){
+  
   }
 }
 

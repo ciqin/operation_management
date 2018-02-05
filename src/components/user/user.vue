@@ -5,7 +5,7 @@
        <headers :content="content"></headers>
     </div>
     <div class="user-sidebar">
-      <sidebar :fontName = "fontName"></sidebar>
+      <sidebar :fontName = "fontName" :userName = "userName"></sidebar>
     </div>
     <div class="user-content">
         <div class="query">
@@ -56,7 +56,8 @@ export default {
       result:0,
       queryNumber:"",
       content:'user pages',
-      fontName:""
+      fontName:"",
+      userName:String
     };
   },
   methods:{
@@ -83,6 +84,7 @@ export default {
     this.fontName = localStorage.fontName
     this.query = cmdUtil.queryHistoricRecords();
     this.usable = cmdUtil.queryAvailableAPI();
+    this.userName = localStorage.email;
   }
 };
 </script>

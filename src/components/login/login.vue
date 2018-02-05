@@ -40,6 +40,7 @@ export default {
       let paths = this.addborder;
       let fontName = this.fontName;
       localStorage.fontName = this.fontName;
+      localStorage.email = this.email;
       if(manager.signIn(this.addborder,this.email,this.password)){
         this.$router.push({ path: `/${paths}` });
       }else{

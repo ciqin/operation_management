@@ -5,54 +5,46 @@
           <headers :content="content"></headers>
       </div>
       <div class="doctor-sidebar">
-          <sidebar :fontName = "fontName"></sidebar>
+           <sidebar :fontName = "fontName" :userName = "userName"></sidebar>
       </div>
       <div class="doctor-content">
-          <div class="content-show">
-              <div class="hospital">
-                  <button class="btn">hospital</button>
+          <div class="operation">
+              <div class="operation-btn">
+                    <button @click="showAsset">Asset</button>
+                    <button @click="changeShow">API</button>
               </div>
-              <div class="adddate" v-show="show">
-                <ul>
-                  <li v-for="item in hospital">
-                        <p>{{ item }}</p>
-                        <button clsss="asset" @click="showAsset(item)">Asset</button>
-                        <button class="api" @click="changeShow( item )" >API</button>
-                  </li>
-                </ul>
+              <div class="queryApi" v-show="apiShow">
+                    <div class="apiLeft">
+                        <ul>
+                              <li v-for="item in apiData" @click="apiDesc(item)">{{item.name}}</li>
+                        </ul>
+                        <button @click="addEle">addApi</button>
+                        <div class="addinput" v-show="addinput">  
+                              <input type="name" placeholder="name" v-model="name">
+                              <input type="data" placeholder="data" v-model="data">
+                              <input type="status" placeholder="status" v-model="status">
+                              <button @click="add" class="addApi">add</button>
+                        </div>
+                    </div>
+                      <div class="content-operation" v-show="API">
+                            <div class="menute">
+                                  <div class="text"><span>name:</span>{{API.name}}</div>
+                                  <div class="text-content">
+                                    <p><span>descrition:</span> <span>{{API.data}}</span></p>
+                                    <p><span>hospital name:</span> <span>{{API.hospital_name}}</span></p>
+                                  </div>
+                            </div>
+                            <div class="status">
+                                  <p><span>status:</span><span>{{API.status}}</span></p>
+                                  <button @click="enableApi">on</button>
+                                  <button @click="disableApi">off</button>
+                            </div>
+                      </div>
               </div>
           </div>
           <div class="asset" v-show="Asset">
               <p><span>owner:</span><span>{{AssetData.owner}}</span></p>
               <p><span>score:</span><span>{{AssetData.score}}</span></p>
-          </div>
-          <div class="queryApi" v-show="apiData">
-              <div class="apiLeft" v-show="apiShow">
-                  <ul>
-                        <li v-for="item in apiData" @click="apiDesc(item)">{{item.name}}</li>
-                  </ul>
-                  <button @click="addEle">addApi</button>
-                  <div class="addinput" v-show="addinput">  
-                        <input type="name" placeholder="name" v-model="name">
-                        <input type="data" placeholder="data" v-model="data">
-                        <input type="status" placeholder="status" v-model="status">
-                        <button @click="add" class="addApi">add</button>
-                  </div>
-              </div>
-              <div class="content-operation" v-show="API">
-                    <div class="menute">
-                          <div class="text"><span>name:</span>{{API.name}}</div>
-                          <div class="text-content">
-                            <p><span>descrition:</span> <span>{{API.data}}</span></p>
-                            <p><span>hospital name:</span> <span>{{API.hospital_name}}</span></p>
-                          </div>
-                    </div>
-                    <div class="status">
-                          <p><span>status:</span><span>{{API.status}}</span></p>
-                          <button @click="enableApi">on</button>
-                          <button @click="disableApi">off</button>
-                    </div>
-              </div>
           </div>
           
       </div>
@@ -73,10 +65,11 @@ export default {
       addinput: false,
       API: false,
       Asset: false,
-      apiShow:false,
+      apiShow: false,
       AssetData: Object,
       fontName: String,
-      apiData:Array,
+      apiData: Array,
+      userName: String,
       name: "",
       data: "",
       status: "",
@@ -88,42 +81,46 @@ export default {
     sidebar: Sidebar
   },
   methods: {
-    changeShow( ele ) {
-      this.apiData =  cmdUtil.queryLocalAPIs(ele);
-      this.apiShow = true;
-      this.Asset = false;
-      this.hospitalName = ele
+    changeShow() {
+      this.apiShow = !this.apiShow;
     },
-    addEle(){
+    addEle() {
       this.addinput = true;
     },
     add() {
       this.addinput = false;
-      console.log(this.hospitalName)
-      cmdUtil.addAPI(this.name,this.data,this.status,this.hospitalName);
+      cmdUtil.addAPI(
+        this.name,
+        this.data,
+        this.status,
+        this.apiData[0].hospital_name
+      );
     },
-    showAsset(ele) {
+    showAsset() {
       this.Asset = true;
-      this.AssetData = cmdUtil.queryAsset(ele);
-      this.apiShow = false;
+      this.API = false;
+      this.AssetData = cmdUtil.queryAsset(this.userName);
     },
-    apiDesc(ele){
-      this.API = ele
+    apiDesc(ele) {
+      this.API = ele;
+      this.Asset = false;
     },
-    enableApi(){
-        if(cmdUtil.enableAPI(this.API.hospital_name,this.API.name)){
-            this.API.status = "on"
-        }
+    enableApi() {
+      if (cmdUtil.enableAPI(this.API.hospital_name, this.API.name)) {
+        this.API.status = "on";
+      }
     },
-    disableApi(){
-        if(cmdUtil.disableAPI(this.API.hospital_name,this.API.name)){
-            this.API.status = "off"
-        }
+    disableApi() {
+      if (cmdUtil.disableAPI(this.API.hospital_name, this.API.name)) {
+        this.API.status = "off";
+      }
     }
   },
   created() {
     this.fontName = localStorage.fontName;
     this.hospital = cmdUtil.queryAvailableHospital();
+    this.userName = localStorage.email;
+    this.apiData = cmdUtil.queryLocalAPIs(this.userName);
   }
 };
 </script>
@@ -165,19 +162,22 @@ button {
   border-radius: 5px;
   background: rgb(117, 144, 102);
 }
-.content-operation {
-  float: left;
-}
 .addApi {
   display: block;
 }
-.queryApi{
+.queryApi {
   display: flex;
 }
-.content-operation{
-  margin-left:30px;
+.content-operation {
+  float: left;
+  margin-left: 30px;
+  margin-top: -30px;
 }
-.addinput{
+.addinput {
   width: 200px;
+}
+.operation {
+  width: 150px;
+  float: left;
 }
 </style>
