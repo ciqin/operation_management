@@ -1,25 +1,24 @@
 <!-- enroll -->
 <template>
   <div class="enroll-wrapper">
+       <div class="switch-wrapper">
+          <div class="user-login" :class="{ 'bk': selectState ==='user'}"  @click="userSelect">user</div>
+          <div class="doctor-login" :class="{ 'bk': selectState ==='hospotal'}"  @click="hospotalSelect">doctor</div>
+        </div>  
       <div class="enroll-content">
-             <p class="type-select">
-                  <span class="user-btn">user:</span> 
-                  <span class="circle" :class="{ 'bk': selectState ==='user'}"  @click="userSelect"></span>
-                  <span class="hospital-btn">hospital:</span>
-                  <span class="circle" :class="{ 'bk': selectState ==='hospotal'}"  @click="hospotalSelect"></span>
-              </p>
-             <p class="info">
-                   <span>name:</span>
+             <div class="info">
                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" v-model="email">
-             </p>
-             <p class="info">
-                   <span>password:</span>
+             </div>
+             <div class="info">
                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password">
-             </p>
-             <p class="info"> 
-                  <span class="desc">description:</span>
-                  <input type="text" v-model="description" placeholder="description"></p>
-             <button class="btn" id="btn" @click="enrollData">enroll</button>
+             </div>
+             <div class="info"> 
+                  <input type="text" v-model="description" placeholder="description">
+              </div>
+              <div class="btnWrapper">
+                  <button class="btn" id="btn" @click="enrollData">enroll</button>
+              </div>
+             
         </div>
   </div>
 </template>
@@ -54,8 +53,7 @@ export default {
 <style scoped>
 .enroll-wrapper {
   position: absolute;
-  padding: 30px;
-  width: 340px;
+  width: 400px;
   border: 1px solid rgb(221, 222, 223);
   background: #ffffff;
   left: 50%;
@@ -65,6 +63,19 @@ export default {
   -moz-transform: translate(-50%, -50%); /* Firefox */
   -webkit-transform: translate(-50%, -50%); /* Safari 和 Chrome */
   -o-transform: translate(-50%, -50%); /* Opera */
+}
+.switch-wrapper {
+  height: 40px;
+  margin-bottom: 15px;
+  display: flex;
+}
+.user-login,
+.doctor-login {
+  flex: 1;
+  line-height: 40px;
+  cursor: pointer;
+  border-bottom: 1px solid rgb(221, 222, 223);
+  text-align: center;
 }
 .login-content input[type="email"] {
   border: 1px solid rgb(221, 222, 223);
@@ -80,6 +91,27 @@ export default {
   height: 30px;
   line-height: 30px;
   margin-bottom: 15px;
+  display: flex;
+}
+.enroll-content:last-child .info{
+  margin-bottom:30px;
+}
+.info .tip{
+  flex: 0 0 80px;
+  margin-right:5px;
+  text-align: right;
+  display: inline-block;
+}
+.info input{
+  width:100%;
+  padding-left:16px;
+  font-size: 15px;
+  flex:1;
+  height:35px;
+  border: 1px solid rgb(221, 222, 223);
+}
+.enroll-content{
+  padding:30px;
 }
 .enroll-content .btn {
   width: 100px;
@@ -93,6 +125,7 @@ export default {
 .type-select {
   height: 30px;
   line-height: 30px;
+  text-align: center;
 }
 .user-btn,
 .hospital-btn {
@@ -108,6 +141,11 @@ export default {
   margin: 0 10px;
 }
 .bk {
-  background: red;
+  border-bottom: 1px solid red; 
+}
+.enroll-wrapper .btnWrapper{
+  width:100%;
+  text-align: center;
+  margin-top:10px;
 }
 </style>
