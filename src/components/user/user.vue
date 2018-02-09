@@ -25,23 +25,27 @@
                             </li>
                         </ul>
                     </transition>
-                      <div class="usable-bk" v-show="userBk">
-                            <div class="close icon-close" @click="controlClose"></div>
-                            <div class="query-result">
-                                  <input type="text" class="input-result" v-model="queryNumber">
-                                  <button class="result-sub" @click="querySubmit">submit</button>
-                            </div>
-                      </div>
+                    <transition name="apiBk">
+                          <div class="usable-bk" v-show="userBk">
+                                <div class="close icon-close" @click="controlClose"></div>
+                                <div class="query-result">
+                                      <input type="text" class="input-result" v-model="queryNumber">
+                                      <button class="result-sub" @click="querySubmit">submit</button>
+                                </div>
+                          </div>
+                    </transition>   
                 </div>
                 <div class="query">
                     <button class="query-btn" @click="clickChange">query records</button>
                     <div class="total-query">
-                          <ul>
-                              <li class="queryList" v-for="(item, index) in query" v-show="query && clickShow" @mouseover ="showMinute( item,index)" @mouseout="hiddenMinute">
-                                  <p><span>{{ item.name }}</span></p>
-                                  <div class="line"></div>
-                              </li>
-                          </ul>
+                        <transition name="queryAni">
+                                <ul v-show="query && clickShow">
+                                    <li class="queryList" v-for="(item, index) in query"  @mouseover ="showMinute( item,index)" @mouseout="hiddenMinute">
+                                        <p><span>{{ item.name }}</span></p>
+                                        <div class="line"></div>
+                                    </li>
+                                </ul>
+                        </transition>        
                     </div>
                     <div class="queryItem" v-show="itemShow" ref="itemTop">
                               <p><span>name:</span> <span>{{ itemShow.name }}</span></p>
@@ -101,7 +105,7 @@ export default {
       this.itemShow = item;
       this.hps1 = this.itemShow.hps[0];
       this.hps2 = this.itemShow.hps[1];
-      this.$refs.itemTop.style.top = index*60+"px";
+      this.$refs.itemTop.style.top = index*50+"px";
     },
     hiddenMinute() {
       this.itemShow = false;
@@ -197,6 +201,7 @@ export default {
   padding: 5px;
   background: rgba(26, 30, 33, 1);
   margin-left: 30px;
+  font-size: 16px;
   color: rgb(110, 113, 114);
 }
 .usable-btn:hover {
@@ -344,11 +349,49 @@ export default {
   box-sizing: border-box;
   overflow-y: auto;
 }
-/* animation */
-.apiCartoon-enter-active, .apiCartoon-leave-active {
-  transition: opacity .5s;
+
+/* apiCartoon and queryAni animation */
+.apiCartoon-enter-active {
+  transition: all .3s ease;
 }
-.apiCartoon-enter, .apiCartoon-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.apiCartoon-leave-active  {
+  transition: all .8s ease;
+}
+.apiCartoon-enter  {
+  transform: translateY(100%);
+}
+.apiCartoon-leave-to  {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* apibk animation */
+.apiBk-enter-active {
+  transition: all .5s ease;
+}
+.apiBk-leave-active {
+  transition: all .5s ease;
+}
+.apiBk-enter{
+  transform: scale(0.5);
+}
+.apiBk-leave-to{
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+/* queryAni animation */
+.queryAni-enter-active{
+  transition: all .3s ease;
+}
+.queryAni-leave-active{
+  transition: all .8s ease;
+}
+.queryAni-enter {
+  transform: translateY(100%);
+}
+.queryAni-leave-to {
+  transform: translateY(-100%);
   opacity: 0;
 }
 </style>

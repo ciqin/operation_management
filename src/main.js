@@ -6,7 +6,7 @@ import VueRouter from 'vue-router';
 import VueResource from 'vue-resource'
 import User from './components/user/user'
 import Login from './components/login/login'
-import Hospital from './components/doctor/doctor'
+import Hospital from './components/hospital/hospital'
 import Revise from './components/revise/revise'
 import Enroll from './components/enroll/enroll'
 
