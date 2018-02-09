@@ -11,18 +11,20 @@
       <div class="main-query clearfix">
             <div class="query-nav">
                 <div class="line"></div>
-                <button class="usable-btn">invoke records</button>
+                <button class="usable-btn" @click="operationApi">invoke records</button>
             </div>
             <div class="query-opt">
                 <div class="usable">
-                      <ul>
-                          <li v-for="(item,index ) in usable" @click="inputShow( item,index)" class="apiItem">
-                              <div class="apiName">{{ item }}</div>
-                              <div class="result" v-show="index ===clickIndex">
-                                 {{ result===false?"":result }}
-                              </div>
-                          </li>
-                      </ul>
+                    <transition name="apiCartoon">
+                        <ul v-show="apiShow">
+                            <li v-for="(item,index ) in usable" @click="inputShow( item,index)" class="apiItem">
+                                <div class="apiName">{{ item }}</div>
+                                <div class="result" v-show="index ===clickIndex">
+                                  {{ result===false?"":result }}
+                                </div>
+                            </li>
+                        </ul>
+                    </transition>
                       <div class="usable-bk" v-show="userBk">
                             <div class="close icon-close" @click="controlClose"></div>
                             <div class="query-result">
@@ -33,17 +35,19 @@
                 </div>
                 <div class="query">
                     <button class="query-btn" @click="clickChange">query records</button>
-                      <ul>
-                          <li class="queryList" v-for="(item, index) in query" v-show="query && clickShow" @mouseover ="showMinute(index)" @mouseout="hiddenMinute">
-                              <p><span>{{ item.name }}</span></p>
-                              <div class="queryItem" v-show="itemShow ===index">
-                                    <p><span>name:</span> <span>{{ item.name }}</span></p>
-                                    <p><span>result:</span> <span>{{ item.result }}</span></p>
-                                    <p><span>hospital:</span> <span>{{ item.hps[0] }},{{ item.hps[1] }}</span></p>
-                              </div>
-                              <div class="line"></div>
-                          </li>
-                      </ul>
+                    <div class="total-query">
+                          <ul>
+                              <li class="queryList" v-for="(item, index) in query" v-show="query && clickShow" @mouseover ="showMinute( item,index)" @mouseout="hiddenMinute">
+                                  <p><span>{{ item.name }}</span></p>
+                                  <div class="line"></div>
+                              </li>
+                          </ul>
+                    </div>
+                    <div class="queryItem" v-show="itemShow" ref="itemTop">
+                              <p><span>name:</span> <span>{{ itemShow.name }}</span></p>
+                              <p><span>result:</span> <span>{{ itemShow.result }}</span></p>
+                              <p><span>hospital:</span> <span>{{ hps1}} ,{{hps2}}</span></p>
+                    </div>
                 </div>
             </div>
       </div>
@@ -66,6 +70,9 @@ export default {
       ele:String,
       queryNumber: '',
       clickIndex:Number,
+      hps1:String,
+      hps2:String,
+      apiShow:true,
       userBk:false,
       content: "user pages",
       fontName: "",
@@ -76,7 +83,6 @@ export default {
   methods: {
     inputShow(ele,index) {
       this.ele = ele;
-      console.log(ele);
       this.clickIndex = index;
       this.userBk = true;
       this.result = false;
@@ -84,7 +90,6 @@ export default {
     querySubmit() {
       this.userBk = false;
       this.result = cmdUtil.invokeAPI(this.ele, this.queryNumber);
-      console.log(this.result)
     },
     controlClose(){
       this.userBk = false;
@@ -92,11 +97,17 @@ export default {
     clickChange() {
       this.clickShow = !this.clickShow;
     },
-    showMinute(index) {
-      this.itemShow = index;
+    showMinute( item,index ) {
+      this.itemShow = item;
+      this.hps1 = this.itemShow.hps[0];
+      this.hps2 = this.itemShow.hps[1];
+      this.$refs.itemTop.style.top = index*60+"px";
     },
     hiddenMinute() {
       this.itemShow = false;
+    },
+    operationApi(){
+      this.apiShow = !this.apiShow ;
     }
   },
   components: {
@@ -180,6 +191,7 @@ export default {
 .usable {
   height: 100%;
   flex: 2;
+  overflow-y:auto;
 }
 .usable-btn {
   padding: 5px;
@@ -253,6 +265,7 @@ export default {
   border-bottom: 2px solid rgb(122,117,146);
 }
 .usable .usable-bk .query-result .result-sub{
+  background: gradient(linear, left top, left bottom, from(#666), to(#000));
   background: -webkit-gradient(linear, left top, left bottom, from(#666), to(#000));
   background: -moz-gradient(linear, left top, left bottom, from(#666), to(#000));
   background: -o-gradient(linear, left top, left bottom, from(#666), to(#000));
@@ -271,7 +284,7 @@ export default {
   width: 200px;
   background: rgb(38, 41, 47);
   flex: 1;
-  overflow-y:auto;
+  position: relative;
 }
 .query .queryList {
   position: relative;
@@ -291,37 +304,51 @@ export default {
 }
 
 .query .queryItem {
-  background: #ccc;
+  background: rgb(54, 61, 68);
+  color: rgb(164, 167, 170);
   width: 100%;
   box-sizing: border-box;
   position: absolute;
-  left: -100%;
-  top: 7px;
-  z-index: 10;
-  border-right: 10px solid #fff;
+  padding:10px;
+  left:-100%;
+  border-radius: 10px 10px 0 10px;
+  top: 0px;
+  z-index: 100;
 }
 .query .queryItem:before {
   content: "";
   display: block;
   position: absolute;
   right: -5px;
-  top: 3px;
+  bottom: 2px;
   transform: rotate(-45deg);
   border-top: 10px solid transparent;
-  border-right: 10px solid #ccc;
+  border-right: 10px solid rgb(54, 61, 68);
   z-index: 11;
 }
-.query-btn {
+.query .query-btn {
   padding: 5px;
   width: 100%;
   height: 40px;
+  position: relative;
   background: rgb(43, 47, 50);
   color: rgb(110, 113, 114);
   border: 1px solid rgb(20, 23, 26);
   margin-top: -1px;
+  z-index: 3;
 }
-
-.add-result {
-  float: left;
+.query .total-query{
+  height:100%;
+  margin-top:-40px;
+  padding-top:40px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+/* animation */
+.apiCartoon-enter-active, .apiCartoon-leave-active {
+  transition: opacity .5s;
+}
+.apiCartoon-enter, .apiCartoon-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>

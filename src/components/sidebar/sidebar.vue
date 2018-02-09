@@ -11,7 +11,7 @@
           <div class="line"></div>
       </div>
       <div class="content">
-        <p>i am is {{userName}}</p>
+        <p>welcome {{userName}}</p>
       </div>
   </div>
 </template>
