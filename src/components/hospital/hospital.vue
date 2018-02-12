@@ -17,43 +17,55 @@
             </div>
             <div class="hospital-opt">
                 <div class="opt-left">
-                      <div class="apiLeft">
-                          <ul>
-                                <li class="apiItem" v-for="item in apiData" @click="apiDesc(item)">{{item.name}}</li>
-                          </ul>
-                      </div>
+                    <transition name="apiList">
+                        <div class="apiLeft" v-show="apiShow">
+                            <ul>
+                                  <li class="apiItem" v-for="item in apiData" @click="apiDesc(item)">{{item.name}}</li>
+                            </ul>
+                        </div>
+                    </transition> 
                 </div>
                 <div class="opt-right">
-                     <div class="asset" v-show="Asset">
-                        <p><span>owner  :  </span><span>{{AssetData.owner}}</span></p>
-                        <div class="line"></div>
-                        <p><span>score  :  </span><span>{{AssetData.score}}</span></p>
-                        <div class="line"></div>
-                     </div>
-                     <div class="content-operation" v-show="API">
-                              <div class="menute">
-                                    <div class="text"><span>name:</span>{{API.name}}</div>
-                                    <div class="text-content">
-                                      <p><span>descrition:</span> <span>{{API.data}}</span></p>
-                                      <p><span>hospital name:</span> <span>{{API.hospital_name}}</span></p>
-                                    </div>
-                              </div>
-                              <div class="status">
-                                    <p><span>status:</span><span>{{API.status}}</span></p>
-                                    <button @click="enableApi">on</button>
-                                    <button @click="disableApi">off</button>
-                              </div>
+                      <transition name="assetDesc">
+                          <div class="asset" v-show="Asset">
+                            <p><span>owner  :  </span><span>{{AssetData.owner}}</span></p>
+                            <div class="line"></div>
+                            <p><span>score  :  </span><span>{{AssetData.score}}</span></p>
+                            <div class="line"></div>
                         </div>
+                      </transition>
+                      <transition  name="contentDesc">
+                          <div class="content-operation" v-show="API">
+                                  <div class="menute">
+                                        <p class="text"><span>name  :  </span>{{API.name}}</p>
+                                        <div class="line"></div>
+                                        <div class="text-content">
+                                          <p><span>descrition  :  </span> <span>{{API.data}}</span></p>
+                                          <div class="line"></div>
+                                          <p><span>hospital name  :  </span> <span>{{API.hospital_name}}</span></p>
+                                          <div class="line"></div>
+                                        </div>
+                                  </div>
+                                  <div class="status">
+                                        <p><span>status  :  </span><span>{{API.status}}</span></p>
+                                        <div class="line"></div>
+                                        <button @click="enableApi">on</button>
+                                        <button @click="disableApi">off</button>
+                                  </div>
+                        </div>
+                      </transition>   
                 </div>
-                <div class="hos-bk" v-show="addinput">
-                     <div class="close icon-close" @click="controlClose"></div>
-                     <div class="addinput">  
-                                <input type="name" placeholder="name" v-model="name">
-                                <input type="data" placeholder="data" v-model="data">
-                                <input type="status" placeholder="status" v-model="status">
-                                <button class="btn" @click="add">add</button>
-                      </div>
-                </div>
+                <transition name="hosOpt">
+                    <div class="hos-bk" v-show="addinput">
+                        <div class="close icon-close" @click="controlClose"></div>
+                        <div class="addinput">  
+                                    <input type="name" placeholder="name" v-model="name">
+                                    <input type="data" placeholder="data" v-model="data">
+                                    <input type="status" placeholder="status" v-model="status">
+                                    <button class="btn" @click="add">add</button>
+                          </div>
+                    </div>
+                </transition>    
             </div>
         </div>
       </div>
@@ -74,7 +86,7 @@ export default {
       addinput: false,
       API: false,
       Asset: false,
-      apiShow: false,
+      apiShow: true,
       AssetData: Object,
       fontName: String,
       apiData: Array,
@@ -236,23 +248,32 @@ button {
 /* hospital  operation right content */
 .main .hospital-opt .opt-right {
   background: rgb(38, 41, 47);
+  overflow: hidden;
   flex: 1;
 }
 .hospital-opt .opt-right .asset {
   position: relative;
 }
-.hospital-opt .opt-right .asset p {
+.hospital-opt .opt-right .asset p,
+.hospital-opt .opt-right .content-operation p {
   height: 50px;
   line-height: 50px;
   text-align: center;
   color: rgb(164, 167, 170);
 }
-.hospital-opt .opt-right .asset .line {
+.hospital-opt .opt-right .asset .line,
+.hospital-opt .opt-right .content-operation .line {
   height: 1px;
   width: 80%;
   background: rgb(18, 22, 24);
   margin: 0 10%;
   box-shadow: 1px 1px 3px #ccc;
+}
+.opt-right .content-operation .status {
+  text-align: center;
+}
+.opt-right .content-operation .status .line {
+  margin-bottom: 20px;
 }
 /*  hospital model start*/
 .hospital-opt .hos-bk {
@@ -325,4 +346,52 @@ button {
   background: rgb(12, 12, 12);
 }
 /*  hospital model end*/
+
+/*  hospital addApi operation animation */
+.hosOpt-enter-active,
+.hosOpt-leave-active {
+  transition: all 0.8s ease;
+}
+.hosOpt-enter {
+  transform: scale(0.5);
+}
+.hosOpt-leave-to {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+/*  hospital addList operation animation */
+.apiList-enter-active,
+.apiList-leave-active {
+  transition: all 0.8s ease;
+}
+.apiList-enter {
+  transform: translateY(100px);
+}
+.apiList-leave-to {
+  transform: translateY(-100px);
+}
+
+/*  hospital assetDesc operation animation */
+.assetDesc-enter-active,
+.assetDesc-leave-active {
+  transition: all 0.8s ease;
+}
+.assetDesc-enter {
+  transform: translateY(100px);
+}
+.assetDesc-leave-to {
+  transform: translateY(-100px);
+}
+/*  hospital contentDesc operation animation */
+.contentDesc-enter-active,
+.contentDesc-leave-activ {
+  transition: all 0.8s ease;
+}
+.contentDesc-enter {
+  transform: translateY(100px);
+}
+.contentDesc-leave-to {
+  transform: translateY(-100px);
+}
 </style>
